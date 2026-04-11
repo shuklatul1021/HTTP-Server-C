@@ -11,7 +11,7 @@ typedef enum{
 typedef struct
 {
     int client_fd;
-    char client_date[1040];
+    char client_data[1040];
     client_state_t client_state;
 }client_info_t;
 

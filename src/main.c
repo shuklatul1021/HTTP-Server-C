@@ -9,9 +9,11 @@
 client_info_t client_state[MAX_CLIENTS];
 
 int main(){
+    initialize_client_state(client_state, MAX_CLIENTS);
+
     int server_socket_fd, client_socket_fd , nfds, free_server_slot;
-    struct sockaddr_in server_info = {0};
-    struct sockaddr_in client_info = {0};
+    struct sockaddr_in server_info , client_info;
+    
     int client_size = 0;
 
     server_info.sin_family = AF_INET;
@@ -39,6 +41,8 @@ int main(){
         close(server_socket_fd);
         return -1;
     }
+
+    printf("Server is listening on port 5555\n");
 
     while(1){
         // Server Accept Retune Client file descriptor
