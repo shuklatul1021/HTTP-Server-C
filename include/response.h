@@ -2,7 +2,7 @@
 #define SERVER_RESPONSE
 
 typedef enum {
-    // 1xx Informational
+    // 100 Informational
     CONTINUE = 100,
     SWITCHING_PROTOCOLS = 101,
     PROCESSING = 102,

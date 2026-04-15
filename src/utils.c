@@ -19,3 +19,12 @@ int find_empty_slot(client_info_t *client_state_machine, int MAX_CLIENTS){
     }
     return -1;
 }
+
+int find_empty_slot_fd(client_info_t *client_state_machine, int MAX_CLIENTS, int match_fd){
+    for(int i = 0; i < MAX_CLIENTS; i++){
+        if(client_state_machine[i].client_fd == match_fd){
+            return i;
+        }
+    }
+    return -1;
+}
