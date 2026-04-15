@@ -7,7 +7,7 @@ void initialize_client_state(client_info_t *client_state_machine, int MAX_CLIENT
     for(int i = 0; i < MAX_CLIENTS; i++){
         client_state_machine[i].client_fd = -1;
         client_state_machine[i].client_state = NEW_CONNECTION;
-        memset(&client_state_machine[i].client_data , "\0", 1040);
+        memset(client_state_machine[i].client_data , 0, 1040);
     }
 }
 

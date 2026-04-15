@@ -6,6 +6,8 @@
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <arpa/inet.h>
+#include <poll.h>
 
 #define MAX_CLIENTS 256
 
@@ -34,6 +36,12 @@ int main() {
     close(server_socket_fd);
     return 1;
   }
+  int set_sock_opt_t;
+  if((set_sock_opt_t = setsockopt(server_socket_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) == -1){
+    perror("setsockopt");
+    exit(EXIT_FAILURE);
+  }
+
 
   int server_bind_t = bind(server_socket_fd, (struct sockaddr *)&server_info, sizeof(server_info));
 
@@ -44,7 +52,7 @@ int main() {
     return -1;
   }
 
-  int server_listen = listen(server_socket_fd, 0);
+  int server_listen = listen(server_socket_fd, 10);
   if (server_listen == -1) {
     perror("listen");
     printf("Listen Error");
@@ -66,26 +74,27 @@ int main() {
     for(int i = 0; i < MAX_CLIENTS; i++){
       if(client_state[i].client_fd != -1){
         pool_fds[ii].fd = client_state[i].client_fd;
-        pool_fds[ii].event = POLLIN;
+        pool_fds[ii].events = POLLIN;
+        ii++;
       }
     }
 
     int n_event_t = poll(pool_fds, num_fds, -1);
     if(n_event_t == -1){
-      perror(pool);
+      perror("poll");
       exit(EXIT_FAILURE);
     }
 
     // Checking for An New Event 
     if(pool_fds[0].revents & POLLIN){
-      if((client_socket_fd = accept(server_socket_fd, (struct *sockaddr *)&client_info , )) == -1){
+      if((client_socket_fd = accept(server_socket_fd, (struct sockaddr *)&client_info , &client_len)) == -1){
         perror("accept");
         continue;
       }
 
       printf("New Connection Connected : %s:%d\n", inet_ntoa(client_info.sin_addr), ntohs(client_info.sin_port));
 
-      free_server_slot = find_empty_slot();
+      free_server_slot = find_empty_slot(client_state, MAX_CLIENTS);
       if(free_server_slot == -1){
         printf("Server Is Full : Closing New Connection");
         close(client_socket_fd);
@@ -93,7 +102,7 @@ int main() {
         client_state[free_server_slot].client_fd = client_socket_fd;
         client_state[free_server_slot].client_state = NEW_CONNECTION;
         num_fds++;
-        printf("Slot : %d has fd %d\n", free_server_slot, client_state[free_server_slot].client_fd)        
+        printf("Slot : %d has fd %d\n", free_server_slot, client_state[free_server_slot].client_fd);        
       }
       n_event_t--;
     }
@@ -103,9 +112,9 @@ int main() {
         if(pool_fds[i].revents & POLLIN){
           n_event_t--;
  
-          int temp_fd = pool_fds[i].client_fd;
+          int temp_fd = pool_fds[i].fd;
           int find_slot = find_empty_slot_fd(client_state, MAX_CLIENTS, temp_fd);
-          ssize_t byte_read = read(temp_fd, &client_state[find_slot].client_data, sizeof(client_state[find_slot]));
+          ssize_t byte_read = read(temp_fd, client_state[find_slot].client_data, sizeof(client_state[find_slot].client_data));
           if(byte_read <= 0){
             close(temp_fd);
             if(find_slot == -1){
@@ -117,7 +126,8 @@ int main() {
               num_fds--;
             }
           }else{
-            printf("Data From Client: %s\n",client_state[find_slot].client_data)
+            handle_client(temp_fd);
+            printf("Data From Client: %s\n",client_state[find_slot].client_data);
           }
         }
     }
