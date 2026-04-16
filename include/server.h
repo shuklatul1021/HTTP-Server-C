@@ -1,8 +1,7 @@
-
 #ifndef SERVER_INFO
 #define SERVER_INFO
 
-typedef enum{
+typedef enum {
     SERVER_ACTIVE,
     SERVER_INACTIVE
 }server_state_t;

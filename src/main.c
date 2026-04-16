@@ -9,6 +9,11 @@
 #include <arpa/inet.h>
 #include <poll.h>
 
+#include "server.h"
+#include "client.h"
+#include "utils.h"
+#include "response.h"
+
 #define MAX_CLIENTS 256
 
 client_info_t client_state[MAX_CLIENTS];
@@ -31,40 +36,17 @@ int main() {
   server_info.sin_addr.s_addr = htonl(INADDR_ANY);
   server_info.sin_port = htons(5555);
 
-  if ((server_socket_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-    perror("socket"); 
-    close(server_socket_fd);
-    return 1;
-  }
-  int set_sock_opt_t;
-  if((set_sock_opt_t = setsockopt(server_socket_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) == -1){
-    perror("setsockopt");
+  int socket_t = socket_object_init(&server_info, &opt);
+  if(socket_t == -1){
+    printf("Failed To Create Socket Object");
     exit(EXIT_FAILURE);
-  }
-
-
-  int server_bind_t = bind(server_socket_fd, (struct sockaddr *)&server_info, sizeof(server_info));
-
-  if (server_bind_t == -1) {
-    perror("bind");
-    printf("Bind Error");
-    close(server_socket_fd);
-    return -1;
-  }
-
-  int server_listen = listen(server_socket_fd, 10);
-  if (server_listen == -1) {
-    perror("listen");
-    printf("Listen Error");
-    close(server_socket_fd);
-    return -1;
   }
 
   printf("Server is listening on port 5555\n");
 
   // Setting up the pollfd structure for the server socket
   memset(pool_fds, 0, sizeof(pool_fds));
-  pool_fds[0].fd = server_socket_fd;
+  pool_fds[0].fd = socket_t;
   pool_fds[0].events = POLLIN;
   num_fds = 1;
 
@@ -87,7 +69,7 @@ int main() {
 
     // Checking for An New Event 
     if(pool_fds[0].revents & POLLIN){
-      if((client_socket_fd = accept(server_socket_fd, (struct sockaddr *)&client_info , &client_len)) == -1){
+      if((client_socket_fd = accept(socket_t, (struct sockaddr *)&client_info , &client_len)) == -1){
         perror("accept");
         continue;
       }
@@ -126,8 +108,8 @@ int main() {
               num_fds--;
             }
           }else{
-            handle_client(temp_fd);
-            printf("Data From Client: %s\n",client_state[find_slot].client_data);
+            handle_client(temp_fd , client_state[find_slot].client_data);
+            
           }
         }
     }
