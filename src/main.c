@@ -36,7 +36,7 @@ int main() {
   server_info.sin_addr.s_addr = htonl(INADDR_ANY);
   server_info.sin_port = htons(5555);
 
-  int socket_t = socket_object_init(&server_info, &opt);
+  int socket_t = socket_object_init(&server_info, &opt, sizeof(server_info));
   if(socket_t == -1){
     printf("Failed To Create Socket Object");
     exit(EXIT_FAILURE);
@@ -108,8 +108,7 @@ int main() {
               num_fds--;
             }
           }else{
-            handle_client(temp_fd , client_state[find_slot].client_data);
-            
+            handle_client(temp_fd , client_state[find_slot].client_data, (int)byte_read);
           }
         }
     }

@@ -16,6 +16,6 @@ typedef struct
     client_state_t client_state;
 } client_info_t;
 
-int handle_client (int client_fd);
+void handle_client(int client_fd, char *client_data, int data_len);
 
 #endif
