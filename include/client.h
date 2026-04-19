@@ -29,6 +29,6 @@ typedef struct
 
 
 void handle_client(int client_fd, char *client_data, int data_len, client_info_t *client_state);
-// void handle_route(client_info_t *client_state);
+void handle_route(client_info_t *client_state);
 
 #endif
