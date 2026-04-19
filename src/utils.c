@@ -51,6 +51,7 @@ void initialize_client_state(client_info_t *client_state_machine, int MAX_CLIENT
         client_state_machine[i].client_fd = -1;
         client_state_machine[i].client_state = NEW_CONNECTION;
         memset(client_state_machine[i].client_data, 0, sizeof(client_state_machine[i].client_data));
+        memset(&client_state_machine[i].request, 0, sizeof(client_state_machine[i].request));
     }
 }
 

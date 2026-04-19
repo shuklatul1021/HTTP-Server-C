@@ -108,7 +108,7 @@ int main() {
               num_fds--;
             }
           }else{
-            handle_client(temp_fd , client_state[find_slot].client_data, (int)byte_read);
+            handle_client(temp_fd , client_state[find_slot].client_data, (int)byte_read, &client_state[find_slot]);
           }
         }
     }
