@@ -53,8 +53,10 @@ int parse_http_request(const char *request_data, int data_len, http_request_t *r
 
     memset(request, 0, sizeof(*request));
     // First Char = Address
+    // Ex - 0xdf434dfd
     const char *cursor = request_data;
     // End Address
+    // Ex - 0xdf434dgc
     const char *end = request_data + data_len;
 
     const char *request_line_end = find_crlf(cursor, end);
