@@ -49,6 +49,6 @@
 
 // } response_status_code_t;
 
-int send_data(client_info_t *client_state, char *response_body);
-
+int send_data(client_info_t *client_state, char *response_body , int status_code);
+char *get_status_message(int status_code);
 #endif

@@ -6,7 +6,7 @@ OBJ_DIR := obj
 BIN_DIR := bin
 TARGET := $(BIN_DIR)/server
 
-SRCS := $(wildcard $(SRC_DIR)/*.c)
+SRCS := $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/route/*.c)
 OBJS := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 DEPS := $(OBJS:.o=.d)
 
@@ -18,6 +18,7 @@ $(TARGET): $(OBJS) | $(BIN_DIR)
 	$(CC) $(OBJS) -o $@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 
 $(OBJ_DIR):
@@ -30,7 +31,7 @@ run: $(TARGET)
 	./$(TARGET)
 
 clean:
-	rm -f $(OBJ_DIR)/*.o $(OBJ_DIR)/*.d $(TARGET)
+	rm -rf $(OBJ_DIR) $(TARGET)
 
 rebuild: clean all
 

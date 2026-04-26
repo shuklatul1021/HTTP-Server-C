@@ -1,17 +1,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
+#include "route/todo.h"
+#include "route/user.h"
+#include "route.h"
 
 #include "client.h"
 
 
 int handle_get_route (client_info_t *client_state) {
-    if (client_state ==  NULL || response_body == NULL || !status_code){
+    if (client_state ==  NULL){
         printf("More Argument Is Require");
         return -1;
     }
     if(strcmp(client_state->request.path , "/api/v1/todo/get_todo") == 0){
-        
+        // pass
     }
 
 }
