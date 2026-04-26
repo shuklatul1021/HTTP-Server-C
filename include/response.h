@@ -1,5 +1,5 @@
-// #ifndef SERVER_RESPONSE
-// #define SERVER_RESPONSE
+#ifndef SERVER_RESPONSE
+#define SERVER_RESPONSE
 
 // typedef enum {
 //     // 100 Informational
@@ -49,4 +49,6 @@
 
 // } response_status_code_t;
 
-// #endif
+int send_data(client_info_t *client_state, char *response_body);
+
+#endif
