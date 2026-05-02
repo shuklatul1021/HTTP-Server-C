@@ -13,11 +13,18 @@
 #include "client.h"
 #include "utils.h"
 #include "response.h"
+#include "route/todo.h"
+#include "route/user.h"
 
 #define MAX_CLIENTS 256
+#define USER_SIZE 100
+#define TODO_SIZE 100
 
 client_info_t client_state[MAX_CLIENTS];
-
+User users[USER_SIZE];
+Todo todos[TODO_SIZE];
+int user_index = 0;
+int todo_index = 0;
 
 int main() {
   int server_socket_fd, client_socket_fd, free_server_slot;
@@ -108,7 +115,7 @@ int main() {
               num_fds--;
             }
           }else{
-            handle_client(temp_fd , client_state[find_slot].client_data, (int)byte_read, &client_state[find_slot]);
+            handle_client(temp_fd , client_state[find_slot].client_data, (int)byte_read, &client_state[find_slot] , &users , &todos , &user_index , &todo_index);
           }
         }
     }

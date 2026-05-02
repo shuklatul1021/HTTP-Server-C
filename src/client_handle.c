@@ -7,7 +7,7 @@
 #include "utils.h"
 #include "response.h"
 
-void handle_route (client_info_t *client_state) {
+void handle_route (client_info_t *client_state, User *users , Todo *todos, int *user_index, int *todo_index) {
     if (client_state == NULL) return;
     char *method = client_state->request.method;
     if (strcmp(method, "GET") == 0) {
@@ -19,21 +19,21 @@ void handle_route (client_info_t *client_state) {
         }
     }
     else if (strcmp(method, "POST") == 0) {
-        int post_result = handle_post_route(client_state);
+        int post_result = handle_post_route(client_state, users, todos, user_index, todo_index);
         if (post_result == -1) {
             printf("Error While Handling The POST Route\n");
             return;
         }
     }
     else if (strcmp(method, "PUT") == 0) {
-        int put_result = handle_put_route(client_state);
+        int put_result = handle_put_route(client_state, users, todos, user_index, todo_index);
         if (put_result == -1) {
             printf("Error While Handling The PUT Route\n");
             return;
         }
     }
     else if (strcmp(method, "DELETE") == 0) {
-        int delete_result = handle_delete_route(client_state);
+        int delete_result = handle_delete_route(client_state, users, todos, user_index, todo_index);
         if (delete_result == -1) {
             printf("Error While Handling The DELETE Route\n");
             return;
@@ -45,7 +45,7 @@ void handle_route (client_info_t *client_state) {
     }
 }
 
-void handle_client(int client_fd, char *client_data, int data_len, client_info_t *client_state)
+void handle_client(int client_fd, char *client_data, int data_len, client_info_t *client_state , User *users , Todo *todos, int *user_index , int *todo_index)
 {
     printf("Client %d says: %.*s\n", client_fd, data_len, client_data);
     printf("This is The Client FD : %d\n", client_state->client_fd);
@@ -56,5 +56,5 @@ void handle_client(int client_fd, char *client_data, int data_len, client_info_t
         return;
     }
 
-    handle_route(client_state);
+    handle_route(client_state, users, todos, user_index, todo_index);
 }

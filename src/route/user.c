@@ -3,18 +3,9 @@
 #include "route/user.h"
 #include "cJSON.h"
 
-typedef struct  
-{
-    int id;
-    char email[256];
-    char password[256];
-} User;
-
-User users[100]; // Simple in-memory user storage
-int index = 0;
 
 
-int register_user(char *request_body){
+int register_user(char *request_body, User *users, int *user_index){
     cJSON *json = cJSON_Parse(request_body);
     if (!json) {
         return -1;
@@ -28,22 +19,23 @@ int register_user(char *request_body){
     printf("Registering user with email: %s and password: %s\n", email->valuestring, password->valuestring);
 
     // Check if user already exists
-    for(int i = 0 ; i < index; i++) {
+    for(int i = 0 ; i < *user_index; i++) {
         if (strcmp(users[i].email, email->valuestring) == 0) {
             cJSON_Delete(json);
             return -1; // User already exists
         }
     }
 
-    users[index].id = index + 1;
-    strcpy(users[index].email, email->valuestring);
-    strcpy(users[index].password, password->valuestring);
-    index++;
+    users[*user_index].id = *user_index + 1;
+    strcpy(users[*user_index].email, email->valuestring);
+    strcpy(users[*user_index].password, password->valuestring);
+    users[*user_index].index = *user_index;
+    (*user_index)++;
     cJSON_Delete(json);
     return 0;
 }
 
-int login_user(char *request_body){
+int login_user(char *request_body, User *users, int *user_index){
     cJSON *json = cJSON_Parse(request_body);
     if (!json) {
         return -1;
@@ -55,7 +47,7 @@ int login_user(char *request_body){
         return -1;
     }
     // Process login logic here
-    for (int i = 0; i < index; i++) {
+    for (int i = 0; i < 100 ; i++) {
         if (strcmp(users[i].email, email->valuestring) == 0 && strcmp(users[i].password, password->valuestring) == 0) {
             cJSON_Delete(json);
             return 0;
@@ -65,15 +57,13 @@ int login_user(char *request_body){
     return -1;
 }
 
-int get_user(int user_id){
-    for (int i = 0; i < index; i++) {
+int get_user(int user_id, User *users, int *user_index) {
+    for (int i = 0; i < *user_index; i++) {
         if (users[i].id == user_id) {
             return i;
         }
     }
     return -1;
 }
-
-
 
 

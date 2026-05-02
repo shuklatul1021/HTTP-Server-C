@@ -19,13 +19,13 @@ int handle_get_route (client_info_t *client_state) {
 
 }
 
-int handle_post_route(client_info_t *client_state){
+int handle_post_route(client_info_t *client_state, User *users, Todo *todos, int *user_index, int *todo_index){
     // Routing Logic For POST Request
     // This Is Most Brute Force Approch Better Can be Done 
 
     // User Auth for User 
     if(strcmp(client_state->request.path, "/api/v1/auth/register") == 0){
-        int user_registration_status = register_user(client_state->request.body);
+        int user_registration_status = register_user(client_state->request.body, users, user_index);
         if (user_registration_status == 0) {
             send_data(client_state, "User Registered Successfully", 200);
         } else {
@@ -63,7 +63,7 @@ int handle_post_route(client_info_t *client_state){
     return 0;
 }
 
-int handle_put_route(client_info_t *client_state){
+int handle_put_route(client_info_t *client_state, User *users , Todo *todos, int *user_index, int *todo_index){
     if(strcmp(client_state->request.path, "/api/v1/todo/update_todo") == 0){
         int update_todo_result = update_todo(client_state->request.body);
         if(update_todo_result == 0){
@@ -84,7 +84,7 @@ int handle_put_route(client_info_t *client_state){
     return 0;
 }
 
-int handle_delete_route(client_info_t *client_state){
+int handle_delete_route(client_info_t *client_state, User *users, Todo *todos, int *user_index, int *todo_index){
     if(strcmp(client_state->request.path, "/api/v1/todo/delete_todo") == 0){
         int delete_todo_result = delete_todo(client_state->request.body);
         if(delete_todo_result == 0){

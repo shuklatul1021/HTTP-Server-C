@@ -4,13 +4,7 @@
 #include <string.h>
 #include "cJSON.h"
 
-typedef struct {
-    int id;
-    char title[256];
-    char description[256];
-    bool isdone;
-    int userid;
-} Todo;
+
 
 Todo user_todo[100];
 int index = 0;
