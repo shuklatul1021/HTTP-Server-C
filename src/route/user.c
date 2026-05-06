@@ -31,7 +31,8 @@ int register_user(char *request_body, User *users, int *user_index){
     (*user_index)++;
 
     printf("User registered successfully with email: %s\n", email->valuestring);
-
+    printf("User Id: %d\n", users[*user_index - 1].id);
+    
     cJSON_Delete(json);
     return 0;
 }

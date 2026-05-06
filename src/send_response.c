@@ -21,8 +21,16 @@ char *get_status_message(int status_code) {
 
 char *get_json_status_message(char *response_body, int status_code){
     cJSON *root = cJSON_CreateObject();
-    cJSON_AddStringToObject(root, "message" ,response_body);
-    cJSON_AddStringToObject(root, "message" , response_body);
+    if(root == NULL){
+        return NULL;
+    }
+    if(status_code >= 200 && status_code < 300) {
+        cJSON_AddStringToObject(root, "message" ,response_body);
+        cJSON_AddBoolToObject(root, "success" , true);
+    } else {
+        cJSON_AddStringToObject(root, "message" ,response_body);
+        cJSON_AddBoolToObject(root, "success" , false);
+    }
     return root;
 }
 
@@ -30,7 +38,7 @@ int send_data(client_info_t *client_state, char *response_body , int status_code
     if (client_state == NULL || response_body == NULL) return;
     char response[2048];
 
-    char *json_string = get_json_status_message(response_body, status_code);
+    char *json_string = cJSON_Print(get_json_status_message(response_body, status_code));
 
     sprintf(response,
         "HTTP/1.1 %d %s\r\n"

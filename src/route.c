@@ -22,8 +22,8 @@ int handle_get_route (client_info_t *client_state, User *users, Todo *todos, int
     }
 
     if(strcmp(client_state->request.path , "/api/v1/todo/get_todo") == 0){
-        int get_user_todo = get_user_todo(user_id, todos, todo_index);
-        if(get_user_todo == 0){
+        int get_todo = get_user_todo(user_id, todos, todo_index);
+        if(get_todo == 0){
             send_data(client_state, "User Todo Abstracted Successfully", 200);
         } else {
             send_data(client_state, "Error While Getting Todo", 400);
