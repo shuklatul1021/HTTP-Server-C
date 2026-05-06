@@ -11,7 +11,7 @@ void handle_route (client_info_t *client_state, User *users , Todo *todos, int *
     if (client_state == NULL) return;
     char *method = client_state->request.method;
     if (strcmp(method, "GET") == 0) {
-        int get_result = handle_get_route(client_state);
+        int get_result = handle_get_route(client_state, users, todos, user_index, todo_index);
         if (get_result == -1)
         {
             printf("Error While Handling The GET Route\n");
@@ -45,8 +45,7 @@ void handle_route (client_info_t *client_state, User *users , Todo *todos, int *
     }
 }
 
-void handle_client(int client_fd, char *client_data, int data_len, client_info_t *client_state , User *users , Todo *todos, int *user_index , int *todo_index)
-{
+void handle_client(int client_fd, char *client_data, int data_len, client_info_t *client_state , User *users , Todo *todos, int *user_index , int *todo_index){
     printf("Client %d says: %.*s\n", client_fd, data_len, client_data);
     printf("This is The Client FD : %d\n", client_state->client_fd);
     int parse_result = parse_http_request(client_data, data_len, &client_state->request);

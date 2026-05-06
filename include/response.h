@@ -51,4 +51,6 @@
 
 int send_data(client_info_t *client_state, char *response_body , int status_code);
 char *get_status_message(int status_code);
+char *get_status_message(char *response_body, int status_code);
+char *get_json_status_message(char *response_body, int status_code);
 #endif

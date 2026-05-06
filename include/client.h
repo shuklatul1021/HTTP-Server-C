@@ -1,6 +1,9 @@
 #ifndef CLIENT_INFO
 #define CLIENT_INFO
 
+#include "route/todo.h"
+#include "route/user.h"
+
 typedef enum
 {
     CONNECTED,
@@ -27,8 +30,7 @@ typedef struct
 } client_info_t;
 
 
-
-void handle_client(int client_fd, char *client_data, int data_len, client_info_t *client_state);
-void handle_route(client_info_t *client_state);
+void handle_client(int client_fd, char *client_data, int data_len, client_info_t *client_state , User *users , Todo *todos, int *user_index , int *todo_index);
+void handle_route (client_info_t *client_state, User *users , Todo *todos, int *user_index, int *todo_index);
 
 #endif

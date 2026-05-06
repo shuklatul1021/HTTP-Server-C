@@ -3,8 +3,6 @@
 #include "route/user.h"
 #include "cJSON.h"
 
-
-
 int register_user(char *request_body, User *users, int *user_index){
     cJSON *json = cJSON_Parse(request_body);
     if (!json) {
@@ -31,6 +29,9 @@ int register_user(char *request_body, User *users, int *user_index){
     strcpy(users[*user_index].password, password->valuestring);
     users[*user_index].index = *user_index;
     (*user_index)++;
+
+    printf("User registered successfully with email: %s\n", email->valuestring);
+
     cJSON_Delete(json);
     return 0;
 }
