@@ -15,7 +15,7 @@ typedef struct {
 
 int add_todo(char *request_body, Todo *user_todo, int *index);
 void get_all_todo(Todo *user_todo, int *index);
-int get_user_todo(int user_id, Todo *user_todo, int *index);
+char *get_user_todo(int user_id, Todo *user_todo, int *index);
 int update_todo(char *request_body, Todo *user_todo, int *index);
 int delete_todo(char *request_body, Todo *user_todo, int *index);
 

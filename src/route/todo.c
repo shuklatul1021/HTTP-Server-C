@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "cJSON.h"
+
 #include "route/todo.h"
+#include "cJSON.h"
 
 int add_todo(char *request_body, Todo *user_todo, int *index) {
     cJSON *json = cJSON_Parse(request_body);
@@ -44,19 +46,23 @@ void get_all_todo(Todo *user_todo, int *index){
     }
 }
 
-int get_user_todo(int user_id, Todo *user_todo, int *index){
+char *get_user_todo(int user_id, Todo *user_todo, int *index){
     printf("These Details Of All Todo For User %d\n:",user_id);
+    cJSON *root = cJSON_CreateArray();
     for(int i = 0; i < *index; i++){
         if(user_todo[i].userid == user_id){
-            printf("Index %d\n:",i);
-            printf("Id: %d\n", user_todo[i].id);
-            printf("Title: %s\n", user_todo[i].title);
-            printf("Description: %s\n", user_todo[i].description);
-            printf("IsBoolen: %d\n", user_todo[i].isdone);
-            printf("UserId: %d\n", user_todo[i].userid);
-            printf("---------------------------------------");
+            cJSON *object = cJSON_CreateObject();
+            cJSON_AddNumberToObject(object, "id" , user_todo[i].id);
+            cJSON_AddStringToObject(object, "title" , user_todo[i].title);
+            cJSON_AddStringToObject(object, "description" , user_todo[i].description);
+            cJSON_AddBoolToObject(object, "isdone" , user_todo[i].isdone ? true : false );
+            cJSON_AddNumberToObject(object, "userId", user_todo[i].userid);
+
+            cJSON_AddItemToArray(root, object);
         }
     }
+
+    return cJSON_Print(root);
     return 0;
 }
 

@@ -32,7 +32,7 @@ int register_user(char *request_body, User *users, int *user_index){
 
     printf("User registered successfully with email: %s\n", email->valuestring);
     printf("User Id: %d\n", users[*user_index - 1].id);
-    
+
     cJSON_Delete(json);
     return 0;
 }
@@ -49,7 +49,7 @@ int login_user(char *request_body, User *users, int *user_index){
         return -1;
     }
     // Process login logic here
-    for (int i = 0; i < 100 ; i++) {
+    for (int i = 0; i < *user_index; i++) {
         if (strcmp(users[i].email, email->valuestring) == 0 && strcmp(users[i].password, password->valuestring) == 0) {
             cJSON_Delete(json);
             return 0;

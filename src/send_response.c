@@ -19,16 +19,17 @@ char *get_status_message(int status_code) {
 }
 
 
-char *get_json_status_message(char *response_body, int status_code){
+cJSON *get_json_status_message(char *response_body, int status_code){
     cJSON *root = cJSON_CreateObject();
     if(root == NULL){
         return NULL;
     }
     if(status_code >= 200 && status_code < 300) {
-        cJSON_AddStringToObject(root, "message" ,response_body);
+        cJSON_AddStringToObject(root, "message" , "Successfully Abstracted Data");
+        cJSON_AddStringToObject(root, "data" , response_body);
         cJSON_AddBoolToObject(root, "success" , true);
     } else {
-        cJSON_AddStringToObject(root, "message" ,response_body);
+        cJSON_AddStringToObject(root, "message" , response_body);
         cJSON_AddBoolToObject(root, "success" , false);
     }
     return root;
