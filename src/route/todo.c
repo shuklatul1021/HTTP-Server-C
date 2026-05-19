@@ -1,11 +1,9 @@
-#include "route/todo.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-#include "cJSON.h"
 
-#include "route/todo.h"
 #include "cJSON.h"
+#include "route/todo.h"
 
 int add_todo(char *request_body, Todo *user_todo, int *index) {
     cJSON *json = cJSON_Parse(request_body);
@@ -20,9 +18,11 @@ int add_todo(char *request_body, Todo *user_todo, int *index) {
         printf("Require More Argumnet In Body");
         return -1;
     }
+    printf("User ID When Adding Todo : %d\n", userid->valueint);
     user_todo[*index].id = *index + 1;
     strcpy(user_todo[*index].title , title->valuestring);
     strcpy(user_todo[*index].description , description->valuestring);
+    user_todo[*index].userid = userid->valueint;
     if(strcmp(isdone->valuestring , "true")){
         user_todo[*index].isdone = true;   
     } else {
@@ -48,6 +48,7 @@ void get_all_todo(Todo *user_todo, int *index){
 
 char *get_user_todo(int user_id, Todo *user_todo, int *index){
     printf("These Details Of All Todo For User %d\n:",user_id);
+    get_all_todo(user_todo, index);
     cJSON *root = cJSON_CreateArray();
     for(int i = 0; i < *index; i++){
         if(user_todo[i].userid == user_id){
@@ -61,6 +62,8 @@ char *get_user_todo(int user_id, Todo *user_todo, int *index){
             cJSON_AddItemToArray(root, object);
         }
     }
+
+    printf("The Todo Are : %s\n", cJSON_Print(root));
 
     return cJSON_Print(root);
     return 0;

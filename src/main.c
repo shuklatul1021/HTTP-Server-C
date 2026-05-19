@@ -27,7 +27,7 @@ int user_index = 0;
 int todo_index = 0;
 
 int main() {
-  int server_socket_fd, client_socket_fd, free_server_slot;
+  int client_socket_fd, free_server_slot;
   struct sockaddr_in server_info, client_info;
 
   socklen_t client_len = sizeof(client_info);
@@ -115,7 +115,7 @@ int main() {
               num_fds--;
             }
           }else{
-            handle_client(temp_fd , client_state[find_slot].client_data, (int)byte_read, &client_state[find_slot] , &users , &todos , &user_index , &todo_index);
+            handle_client(temp_fd , client_state[find_slot].client_data, (int)byte_read, &client_state[find_slot] , (User *)(&users) , (Todo *)(&todos) , &user_index , &todo_index);
           }
         }
     }

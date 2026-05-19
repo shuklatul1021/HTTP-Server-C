@@ -1,8 +1,7 @@
 #ifndef TODO_ROUTE
 #define TODO_ROUTE
-#include <stdbool.h>
 
-#include "route/todo.h"
+#include <stdbool.h>
 
 typedef struct {
     int id;
